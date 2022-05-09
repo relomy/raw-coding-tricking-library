@@ -1,4 +1,6 @@
-﻿namespace TrickingLibrary.Api;
+﻿using TrickingLibrary.Api.Models;
+
+namespace TrickingLibrary.Api;
 
 public class Startup
 {
@@ -8,6 +10,8 @@ public class Startup
     {
         services.AddControllers();
 
+        services.AddSingleton<TrickyStore>();
+        
         services.AddCors(options => options.AddPolicy(AllCors, build =>
             build.AllowAnyHeader()
                 .AllowAnyOrigin()
