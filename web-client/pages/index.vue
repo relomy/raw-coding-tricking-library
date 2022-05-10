@@ -1,35 +1,25 @@
 <template>
-  <v-row align="center" justify="center">
-    <v-col cols="12" md="6" sm="8">
-      <v-card class="logo py-4 d-flex justify-center">
-        <NuxtLogo/>
-        <VuetifyLogo/>
-      </v-card>
+  <div>
 
-      <v-card>
-        <v-card-title class="headline">
-          title
-        </v-card-title>
+    <v-file-input accept="video/*" @change="handleFile"></v-file-input>
 
-        <div v-if="tricks">
-          <p v-for="t in tricks">
-            {{ t.name }}
-          </p>
-        </div>
+    <div v-if="tricks">
+      <p v-for="t in tricks">
+        {{ t.name }}
+      </p>
+    </div>
 
-        <div>
-          <v-text-field v-model="trickName" label="Tricking Name" />
-          <v-btn @click="saveTrick">Save Trick</v-btn>
-        </div>
+    <div>
+      <v-text-field v-model="trickName" label="Tricking Name"/>
+      <v-btn @click="saveTrick">Save Trick</v-btn>
+    </div>
 
 
-        {{ message }}
-        <v-btn @click="reset">Reset</v-btn>
-        <v-btn @click="resetTricks">Reset Tricks</v-btn>
+    {{ message }}
+    <v-btn @click="reset">Reset</v-btn>
+    <v-btn @click="resetTricks">Reset Tricks</v-btn>
 
-      </v-card>
-    </v-col>
-  </v-row>
+  </div>
 </template>
 
 <script>
@@ -37,7 +27,6 @@
 import {mapActions, mapMutations, mapState} from 'vuex';
 
 export default {
-  name: 'IndexPage',
   data: () => ({
     trickName: ""
   }),
@@ -60,6 +49,21 @@ export default {
     async saveTrick() {
       await this.createTrick({trick: {name: this.trickName}});
       this.trickName = "";
+    },
+    async handleFile(file) {
+      if (!file) {
+        return;
+      }
+
+      console.log(file);
+
+      // create form
+      const form = new FormData();
+      form.append("video", file);
+
+      // send to controller
+      const result = await this.$axios.post("http://localhost:5063/api/videos", form);
+      console.log(`Result: ${result}`)
     }
   }
 
